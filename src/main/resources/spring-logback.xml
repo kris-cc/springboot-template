@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="HOME_LOG" value="/tmp/retailer.log"/>
+    <property name="SPRING_DEV_PROFILE" value="dev"/>
+
+
+    <springProfile name="${SPRING_DEV_PROFILE}">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    </springProfile>
+
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%thread] %-5level %-50logger{40} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG}</file>
+        <encoder>
+            <pattern>%d [%thread] %-5level %-50logger{40} - %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${HOME_LOG}.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="ROLLING-FILE"/>
+        <springProfile name="${SPRING_DEV_PROFILE}">
+            <appender-ref ref="CONSOLE"/>
+        </springProfile>
+    </root>
+
+    <springProfile name="${SPRING_DEV_PROFILE}">
+        <logger name="dev.cloudconnect" level="debug"/>
+    </springProfile>
+
+</configuration>
